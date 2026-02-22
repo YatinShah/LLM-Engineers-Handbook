@@ -148,23 +148,29 @@ python --version  # Should show Python 3.11.x
 pyenv --version   # Should show pyenv 2.3.36 or later
 ```
 
-2. Install Python 3.11.8:
+2. Install Python 3.11.14:
 
 ```bash
-pyenv install 3.11.8
+pyenv install 3.11.14n --verbose
+```
+
+2.a  To uninstall
+
+```bash
+pyenv uninstall 3.11.14
 ```
 
 3. Verify the installation:
 
 ```bash
-python --version  # Should show Python 3.11.8
+python --version  # Should show Python 3.11.14
 ```
 
 4. Confirm Python version in the project directory:
 
 ```bash
 python --version
-# Output: Python 3.11.8
+# Output: Python 3.11.14
 ```
 
 > [!NOTE]  
@@ -198,10 +204,12 @@ This will:
 
 As our task manager, we run all the scripts using [Poe the Poet](https://poethepoet.natn.io/index.html).
 
-1. Start a Poetry shell:
+1. Start a [Poetry shell](https://python-poetry.org/docs/managing-environments/#bash-csh-zsh):
 
 ```bash
 poetry shell
+# Or by rnuning
+eval $(poetry env activate)
 ```
 
 2. Run project commands using Poe the Poet:
@@ -365,6 +373,7 @@ Default credentials:
   - `password`: 
 
 → Find out more about using and setting up [ZenML](https://docs.zenml.io/).
+- All the configrations of ZenML are stored under *~/.config/zenml/config.yaml*
 
 #### Qdrant
 

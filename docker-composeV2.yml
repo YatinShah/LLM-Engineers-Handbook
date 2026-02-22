@@ -1,5 +1,6 @@
 version: "3.8"
 
+
 services:
   mongo:
     image: mongo:4.4
@@ -9,6 +10,7 @@ services:
     logging:
       options:
         max-size: 1g
+    # credentials pulled from .env via variable substitution
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
@@ -36,26 +38,31 @@ services:
     restart: always
 
 #mySql for ZenML server
-  # mysql:
-  #   image: mysql:8.0
-  #   ports:
-  #     - 3306:3306
-  #   environment:
-  #     - MYSQL_ROOT_PASSWORD=password
-  #   networks:
-  #     - local
-  # zenml:
-  #   image: zenmldocker/zenml-server
-  #   ports:
-  #     - "8237:8080"
-  #   environment:
-  #     # point at the mysql service on the same network
-  #     - ZENML_STORE_URL=mysql://root:password@mysql/zenml
-  #   depends_on:
-  #     - mysql
-  #   restart: on-failure
-  #   networks:
-  #     - local
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-zenml}
+    networks:
+      - local
+  zenml:
+    image: zenmldocker/zenml-server
+    ports:
+      - "8237:8080"
+    env_file:
+      - .env
+    environment:
+      # point at the mysql service on the same network; password from .env
+      - ZENML_STORE_URL=mysql://root:${MYSQL_ROOT_PASSWORD}@mysql/zenml
+    depends_on:
+      - mysql
+    restart: on-failure
+    networks:
+      - local
 
 volumes:
   mongo_data:
